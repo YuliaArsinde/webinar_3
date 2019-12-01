@@ -1,0 +1,34 @@
+import re
+import pymorphy2
+morph = pymorphy2.MorphAnalyzer()
+
+f = open("text.txt", "r")
+
+content = ''
+
+if f.mode == 'r':
+    content = f.read()
+
+first = content.replace(',', '')
+print(first)
+
+words = re.split(r'\W+', content)
+for i in range(len(words)):
+    print(words[i])
+
+words_lower = list(map(lambda x: x.lower(), words))
+words_lem = list()
+for word in words_lower:
+    p = morph.parse(word)[0]
+    words_lem.append(p.normal_form)
+print(set(words_lem))
+
+words_dict = {}
+words_set = set(words_lower)
+print(words_set)
+for word in words_set:
+    words_dict[word] = words_lower.count(word)
+    print(word + ' : ' + str(words_dict[word]))
+
+ordered_dict = dict(sorted(words_dict.items(), key=lambda x: x[1], reverse=True)[:5])
+print(ordered_dict)
